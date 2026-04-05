@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unfiltered Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: #f1f1f1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .chat-container {
+            width: 500px;
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .messages {
+            height: 350px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: #121212;
+        }
+        .message { margin: 5px 0; }
+        .user { color: #4caf50; }
+        .bot { color: #ff5722; }
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: #222;
+            color: #fff;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #ff5722;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover { background: #e64a19; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="messages" id="messages"></div>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Ask me anything...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const messagesDiv = document.getElementById("messages");
+
+        function sendMessage() {
+            const input = document.getElementById("userInput");
+            const userMessage = input.value.trim();
+            if (userMessage === "") return;
+
+            addMessage("user", userMessage);
+
+            const botResponse = generateUnfilteredResponse(userMessage);
+            setTimeout(() => addMessage("bot", botResponse), 500);
+
+            input.value = "";
+        }
+
+        function addMessage(sender, text) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function generateUnfilteredResponse(input) {
+            try {
+                const lowInput = input.toLowerCase();
+                if (lowInput.includes("what")) {
+                    return "you asked 'what'--so let me break it down, no filters.";
+                } else if (lowInput.includes("why")) {
+                    return "because that's just how it is. why not?";
+                } else if (lowInput.includes("how")) {
+                    return "how? you just make it happen.";
+                } else if (lowInput.includes("who")) {
+                    return "you already know 'who'. it's you.";
+                } else {
+                    return "idk man, you tell me.";
+                }
+            } catch (error) {
+                return "something went wrong, but i'm still here.";
+            }
+        }
+    </script>
+</body>
+</html>

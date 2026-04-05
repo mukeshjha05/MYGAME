@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mukesh's Gaming Zone</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #111;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            color: white;
+        }
+
+        #game-container {
+            position: relative;
+            width: 600px;
+            height: 200px;
+            border-bottom: 5px solid #ff4b2b;
+            background-color: #222;
+            overflow: hidden;
+        }
+
+        #player {
+            position: absolute;
+            bottom: 0;
+            left: 50px;
+            width: 40px;
+            height: 40px;
+            background-color: #ff4b2b;
+            border-radius: 5px;
+        }
+
+        #obstacle {
+            position: absolute;
+            bottom: 0;
+            right: -50px;
+            width: 30px;
+            height: 50px;
+            background-color: #555;
+        }
+
+        #score {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 20px;
+        }
+
+        #user-name {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-weight: bold;
+            color: #ff4b2b;
+            font-size: 18px;
+        }
+
+        .jump-animation {
+            animation: jump 0.5s linear;
+        }
+
+        @keyframes jump {
+            0% { bottom: 0; }
+            30% { bottom: 100px; }
+            70% { bottom: 100px; }
+            100% { bottom: 0; }
+        }
+
+        .obstacle-animation {
+            animation: move 1.5s infinite linear;
+        }
+
+        @keyframes move {
+            0% { right: -50px; }
+            100% { right: 650px; }
+        }
+
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            display: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #ff4b2b;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body onclick="jump()">
+
+    <div id="game-container">
+        <div id="user-name">PLAYER: MUKESH KUMAR JHA</div>
+        <div id="score">Score: 0</div>
+        
+        <div id="player"></div>
+        <div id="obstacle" class="obstacle-animation"></div>
+
+        <div id="message">
+            <h1>Game Over!</h1>
+            <button onclick="resetGame()">फिर से खेलें</button>
+        </div>
+    </div>
+
+    <script>
+        const player = document.getElementById("player");
+        const obstacle = document.getElementById("obstacle");
+        const scoreElement = document.getElementById("score");
+        const message = document.getElementById("message");
+        let score = 0;
+        let isGameOver = false;
+
+        function jump() {
+            if (isGameOver) return;
+            if (player.classList != "jump-animation") {
+                player.classList.add("jump-animation");
+                setTimeout(function() {
+                    player.classList.remove("jump-animation");
+                }, 500);
+            }
+        }
+
+        let checkDead = setInterval(function() {
+            if (isGameOver) return;
+
+            let playerTop = parseInt(window.getComputedStyle(player).getPropertyValue("top"));
+            let obstacleLeft = parseInt(window.getComputedStyle(obstacle).getPropertyValue("left"));
+
+            // Collision detection
+            if (obstacleLeft < 90 && obstacleLeft > 50 && playerTop >= 110) {
+                obstacle.style.animation = "none";
+                obstacle.style.display = "none";
+                message.style.display = "block";
+                isGameOver = true;
+            } else {
+                score++;
+                scoreElement.innerHTML = "Score: " + Math.floor(score / 10);
+            }
+        }, 10);
+
+        function resetGame() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
